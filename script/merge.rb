@@ -54,24 +54,34 @@ def read_template(which)
   File.read(file)
 end
 
-def replace(text, target, replacement)
-  text.gsub(%r{\(\(#{target}\)\)}, replacement)
+def replace(lines, target, replacement)
+  lines.each { |line| line.gsub!(%r{\(\(#{target}\)\)}m, replacement) }
 end
 
 def merge(template, body, sender, recipient)
-  text = replace(template, "NAME", sender["name"])
-  text = replace(text, "ADDRESS", sender["address"].join(" \\ "))
-  text = replace(text, "RECIPIENT", [ recipient["name"], recipient["address"] ].flatten.join(" \\ "))
-  text = replace(text, "BODY", body)
+  lines = template.split("\n")
+  replace(lines, "NAME", sender["name"])
+  replace(lines, "ADDRESS", sender["address"].join(' \\\\\\\\ '))
+  replace(lines, "RECIPIENT", [ recipient["name"], recipient["address"] ].flatten.join(' \\\\\\\\ '))
+  replace(lines, "BODY", body)
+  lines.join("\n")
 end
 
 def make_pdf(text)
   tmp_dir = path_to("tmp")
   file = Tempfile.create(["output", ".tex"], tmp_dir)
+  pp text
   file.write(text)
   file.flush
   file_path = normalize(file.path)
-  system(%Q{cat #{file_path}; pdflatex -interaction=batchmode -output-directory=#{tmp_dir} "#{file_path}"})
+  system(%Q{pdflatex -interaction=batchmode -output-directory=#{tmp_dir} "#{file_path}"})
+  pdf_file = file_path.sub(/\.tex/, ".pdf")
+  if File.exists?(pdf_file)
+    return pdf_file
+  else
+    log_file = file_path.sub(/\.tex/, ".log")
+    raise "Could not find pdf file [#{pdf_file}] -- check log output from: [#{log_file}]?"
+  end
 end 
 
 options["sender"] ||= "me"
@@ -91,5 +101,7 @@ template_data = read_template options["template"]
 body = STDIN.read
 
 text = merge(template_data, body, sender_data, recipient_data)
-make_pdf text
+pdf_file = make_pdf text
+
+system("open #{pdf_file}")
 
