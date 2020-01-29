@@ -4,7 +4,7 @@ Send a file (e.g., a PDF file) to a recipient's fax number via the Phaxio.com AP
 
 Get set up:
 
- - Go to phaxio.com and create an account
+ - Go to https://www.phaxio.com/ and create an account
  - Put some money in there; I think it's costing $0.07 per page(?) these days
  - Grab your API keys from https://console.phaxio.com/api_credentials
 
