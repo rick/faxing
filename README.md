@@ -24,7 +24,6 @@ $ export PHAXIO_API_SECRET=your-secret-here
 Run the script:
 
 ```
-$ bundle install
 # usage: bundle exec ruby script/fax.rb <phone-number> <file>
 $ bundle exec ruby script/fax.rb 18885551212 ~/Desktop/impeach-trump-senator-dipshit.pdf
 ```
