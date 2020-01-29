@@ -8,8 +8,8 @@ require "pp"
 
 options = {}
 
-OptionParser.new do |opts|
-  opts.banner = "Usage: #{$0} [options]"
+op = OptionParser.new do |opts|
+  opts.banner = "Usage: #{$0} [options]\n (provide message body on STDIN)"
 
   opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
     options[:verbose] = v
@@ -26,7 +26,8 @@ OptionParser.new do |opts|
   opts.on("--template=TEMPLATE", "name of templates/<template>.tex file to merge (default: letter)") do |template|
     options["template"] = template
   end
-end.parse!
+end
+
 
 def current_path
   File.dirname(__FILE__)
@@ -70,7 +71,6 @@ end
 def make_pdf(text)
   tmp_dir = path_to("tmp")
   file = Tempfile.create(["output", ".tex"], tmp_dir)
-  pp text
   file.write(text)
   file.flush
   file_path = normalize(file.path)
@@ -84,24 +84,42 @@ def make_pdf(text)
   end
 end 
 
-options["sender"] ||= "me"
-
-if options["recipient"]
-  recipient_file = path_to "data", "#{options["recipient"]}.json"
-else
-  puts options.usage
-  exit 1
+def clean_fax_number(string)
+  string.gsub(%r{[^0-9]}, '')
 end
 
-options["template"] ||= "letter"
+def extract_options(options, op)
+  op.parse!
+  sender_data, recipient_data, template_data = nil, nil, nil
 
-sender_data = person_data options["sender"]
-recipient_data = person_data options["recipient"]
-template_data = read_template options["template"]
+  options["sender"] ||= "me"
+
+  if options["recipient"]
+    recipient_file = path_to "data", "#{options["recipient"]}.json"
+  else
+    puts op.parse("--help")
+    exit 1
+  end
+
+  options["template"] ||= "letter"
+
+  sender_data = person_data options["sender"]
+  recipient_data = person_data options["recipient"]
+  raise "file [#{recipient_file}] has no fax data" unless recipient_data["fax"]
+  template_data = read_template options["template"]
+
+  return [sender_data, recipient_data, template_data]
+end
+
+sender_data, recipient_data, template_data = extract_options(options, op)
+fax_number = clean_fax_number(recipient_data["fax"])
 body = STDIN.read
 
 text = merge(template_data, body, sender_data, recipient_data)
 pdf_file = make_pdf text
 
 system("open #{pdf_file}")
+
+puts "When ready, run:"
+puts "bundle exec ruby script/fax.rb #{fax_number} #{pdf_file}"
 
