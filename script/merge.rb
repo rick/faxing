@@ -2,6 +2,8 @@
 
 require "optparse"
 require "json"
+require "pathname"
+require "tempfile"
 require "pp"
 
 options = {}
@@ -30,9 +32,13 @@ def current_path
   File.dirname(__FILE__)
 end
 
+def normalize(path)
+  Pathname.new(path).realpath
+end
+
 def path_to(*paths)
   segments = [ current_path, ".." ] + paths
-  File.join(*segments)
+  normalize(File.join(*segments))
 end
 
 def person_data(which)
@@ -59,6 +65,15 @@ def merge(template, body, sender, recipient)
   text = replace(text, "BODY", body)
 end
 
+def make_pdf(text)
+  tmp_dir = path_to("tmp")
+  file = Tempfile.create(["output", ".tex"], tmp_dir)
+  file.write(text)
+  file.flush
+  file_path = normalize(file.path)
+  system(%Q{cat #{file_path}; pdflatex -interaction=batchmode -output-directory=#{tmp_dir} "#{file_path}"})
+end 
+
 options["sender"] ||= "me"
 
 if options["recipient"]
@@ -75,6 +90,6 @@ recipient_data = person_data options["recipient"]
 template_data = read_template options["template"]
 body = STDIN.read
 
-final = merge(template_data, body, sender_data, recipient_data)
-puts final
+text = merge(template_data, body, sender_data, recipient_data)
+make_pdf text
 
