@@ -62,7 +62,7 @@ This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format
  restricted \write18 enabled.
 entering extended mode
 When ready, run:
-bundle exec ruby script/fax.rb 2022283398 /Users/rick/git/faxing/tmp/output20200129-70151-11fy0ya.pdf
+bundle exec ruby script/fax.rb 8885551212 /Users/rick/git/faxing/tmp/output20200129-70151-11fy0ya.pdf
 
 # probably a PDF viewer window with your PDF in it will show up; or an error message
 ```
