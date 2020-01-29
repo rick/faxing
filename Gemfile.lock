@@ -1,0 +1,36 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activesupport (6.0.2.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 0.7, < 2)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
+      zeitwerk (~> 2.2)
+    concurrent-ruby (1.1.5)
+    faraday (0.17.3)
+      multipart-post (>= 1.2, < 3)
+    i18n (1.8.2)
+      concurrent-ruby (~> 1.0)
+    mime-types (3.3.1)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2019.1009)
+    minitest (5.14.0)
+    multipart-post (2.1.1)
+    phaxio (2.0.1)
+      activesupport
+      faraday (~> 0.10)
+      mime-types (~> 3.0)
+    thread_safe (0.3.6)
+    tzinfo (1.2.6)
+      thread_safe (~> 0.1)
+    zeitwerk (2.2.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  phaxio
+
+BUNDLED WITH
+   2.0.2
