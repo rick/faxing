@@ -29,3 +29,5 @@ $ bundle exec ruby script/fax.rb 18885551212 ~/Desktop/impeach-trump-senator-dip
 ```
 
 Check the progress on your dashboard at: https://console.phaxio.com/
+
+![](images/fax-summary.png)
