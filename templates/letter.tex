@@ -1,13 +1,14 @@
 \documentclass{letter}
 \usepackage{graphicx}
-\graphicspath{ {./images/} }
-\signature{((NAME))}
+\graphicspath{ {./images/data} }
 \address{((ADDRESS))}
 \begin{document}
 \begin{letter}{((RECIPIENT))}
 \opening{To whom it may concern:}
 ((BODY))
-\closing{Sincerely,}
-\includegraphics{signature}
+\closing{Sincerely,\\
+	\fromsig{\includegraphics[scale=1]{signature}} \\
+	\fromname{((NAME))}
+}
 \end{letter}
 \end{document}
