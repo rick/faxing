@@ -38,14 +38,15 @@ Lol.
 
 But, seriously:
 
- - `brew install basictex`; you probably have to log out / in, or run `bash --login` to make this work after installation
+ - `brew install basictex`; you probably have to log out / in, or run `bash --login` to make this work after installation.
    - yes, I'm presuming you're on a mac for this.  :shrug:
- - Copy data/me.json-sample over to data/me.json and put your (sender's) data in
- - Make data/whomever.json files for your recipients, and fill their data out. Add a "fax:" hash entry for a fax number
- - Tweak the templates/letter.tex template if you want to
- - Make a text file somewhere (like tmp/letter-body.txt) with the text of your letter body in it
- - Make sure your phaxio account and credentials are set up, like above
- - Run the script for a sender / recipient
+ - Copy data/me.json-sample over to data/me.json and put your (sender's) data in.
+ - Make data/whomever.json files for your recipients, and fill their data out. Add a "fax:" hash entry for a fax number (see data/they.json for a sample).
+ - drop a `signature.png` image in images/data/ for your pretty hand-drawn signature.
+ - Tweak the templates/letter.tex template if you want to.
+ - Make a text file somewhere (like tmp/letter-body.txt) with the text of your letter body in it.
+ - Make sure your phaxio account and credentials are set up, like above.
+ - Run the script for a sender / recipient.
 
 ```
 $ ruby script/merge.rb 
